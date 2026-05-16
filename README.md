@@ -6,7 +6,7 @@ Frontend del sistema de **Peticiones, Quejas, Reclamos y Sugerencias (PQRS)** pa
 
 - **Alejandro Marín Hernández**
 - **Maria Jose Vásquez**
-- **Diego**
+- **Diego **
 
 ## Servidor de desarrollo
 
@@ -55,3 +55,5 @@ src/
 ├── main.ts
 └── styles.css
 ```
+
+## Código creado con amor 
