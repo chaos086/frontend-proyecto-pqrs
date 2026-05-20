@@ -1,78 +1,204 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { NgFor, NgIf } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+
+interface MenuItem { label: string; route: string; icon: string; badge?: number; }
 
 @Component({
   selector: 'app-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgFor, NgIf],
   template: `
-    <nav class="navbar">
-      <div class="nav-inner">
-        <div class="nav-brand">
-          <a routerLink="/solicitudes">PQRS</a>
+    <div class="layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+        <div class="sidebar-top">
+          <!-- Logo -->
+          <div class="logo-section">
+            <div class="logo-box">
+              <span class="logo-text">UQ</span>
+            </div>
+            <h1 class="uni-name">Universidad<br>del Quindío</h1>
+          </div>
+
+          <div class="brand-section">
+            <h2 class="brand-title">PQRS</h2>
+            <p class="brand-subtitle">Sistema de Peticiones,<br>Quejas, Reclamos y Sugerencias</p>
+          </div>
+
+          <!-- Menu -->
+          <nav class="menu">
+            <a *ngFor="let item of menuItems"
+               [routerLink]="item.route"
+               routerLinkActive="menu-active"
+               [routerLinkActiveOptions]="{exact: item.route === '/inicio'}"
+               class="menu-item">
+              <span class="menu-icon">{{ item.icon }}</span>
+              <span class="menu-label">{{ item.label }}</span>
+              <span *ngIf="item.badge" class="menu-badge">{{ item.badge }}</span>
+            </a>
+          </nav>
         </div>
-        <div class="nav-links">
-          <a routerLink="/solicitudes" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Solicitudes</a>
-          <a routerLink="/crear-solicitud" routerLinkActive="active">Nueva Solicitud</a>
-          <a routerLink="/usuarios" routerLinkActive="active">Usuarios</a>
-          <a routerLink="/crear-usuario" routerLinkActive="active">Nuevo Usuario</a>
-          <span class="nav-divider"></span>
-          <span class="user-role">{{ getUserLabel() }}</span>
-          <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+
+        <!-- Logout -->
+        <div class="sidebar-bottom">
+          <button class="logout-btn" (click)="logout()">
+            <span class="menu-icon">🚪</span>
+            Cerrar sesión
+          </button>
         </div>
+      </aside>
+
+      <!-- MAIN -->
+      <div class="main-area">
+        <!-- Header -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <h1 class="greeting">{{ greetMessage }}</h1>
+            <p class="greeting-sub">Bienvenido al sistema PQRS de la Universidad del Quindío.</p>
+          </div>
+          <div class="topbar-right">
+            <button class="notif-btn">🔔</button>
+            <div class="user-card">
+              <div class="avatar"></div>
+              <div class="user-info">
+                <span class="user-name">{{ auth.getUserName() }}</span>
+                <span class="user-role">{{ userRoleLabel }}</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content">
+          <router-outlet />
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+          <p>Universidad del Quindío - Sistema PQRS &copy; {{ year }}</p>
+        </footer>
       </div>
-    </nav>
-    <main class="main-content">
-      <router-outlet />
-    </main>
-    <footer class="footer">
-      <p>Universidad del Quindío - Sistema PQRS &copy; {{ year }}</p>
-    </footer>
+    </div>
   `,
   styles: [`
-    .navbar {
-      background: linear-gradient(135deg, #1565c0, #0d47a1);
-      color: white; box-shadow: 0 2px 8px rgba(0,0,0,.15); position: sticky; top: 0; z-index: 100;
+    .layout { display: flex; min-height: 100vh; background: var(--bg-body); }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: var(--sidebar-width); min-width: var(--sidebar-width);
+      background: linear-gradient(180deg, #2E1065 0%, #5B21B6 50%, #4F46E5 100%);
+      color: white; display: flex; flex-direction: column; justify-content: space-between;
+      padding: 1.5rem; height: 100vh; overflow-y: auto; position: sticky; top: 0;
+      box-shadow: 4px 0 24px rgba(0,0,0,.15); flex-shrink: 0;
     }
-    .nav-inner {
+    .sidebar-top { flex: 1; }
+
+    .logo-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 2rem; }
+    .logo-box {
+      width: 96px; height: 96px; background: white; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2); margin-bottom: 1rem;
+    }
+    .logo-text { color: #5B21B6; font-size: 2.8rem; font-weight: 900; line-height: 1; }
+    .uni-name { font-size: 1.3rem; font-weight: 700; text-align: center; line-height: 1.3; }
+
+    .brand-section { margin-top: 1.5rem; text-align: left; width: 100%; }
+    .brand-title { font-size: 2.2rem; font-weight: 800; margin-bottom: .3rem; }
+    .brand-subtitle { font-size: .85rem; color: rgba(255,255,255,.7); line-height: 1.5; }
+
+    .menu { margin-top: 2rem; display: flex; flex-direction: column; gap: .4rem; }
+    .menu-item {
+      display: flex; align-items: center; gap: .8rem;
+      padding: .9rem 1.2rem; border-radius: 16px; color: rgba(255,255,255,.8);
+      text-decoration: none; font-weight: 500; font-size: .95rem;
+      transition: all .25s ease;
+    }
+    .menu-item:hover { background: rgba(255,255,255,.1); color: white; text-decoration: none; }
+    .menu-active { background: rgba(255,255,255,.2); color: white; font-weight: 600; backdrop-filter: blur(8px); box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+    .menu-icon { font-size: 1.2rem; width: 1.5rem; text-align: center; }
+    .menu-label { flex: 1; }
+    .menu-badge {
+      background: rgba(255,255,255,.3); font-size: .75rem; padding: .15rem .65rem;
+      border-radius: 999px; font-weight: 600; min-width: 1.6rem; text-align: center;
+    }
+
+    .sidebar-bottom { border-top: 1px solid rgba(255,255,255,.15); padding-top: 1.2rem; margin-top: 2rem; }
+    .logout-btn {
+      width: 100%; padding: 1rem 1.2rem; border-radius: 16px; background: rgba(255,255,255,.08);
+      border: none; color: rgba(255,255,255,.8); font-size: .95rem; font-weight: 500;
+      cursor: pointer; display: flex; align-items: center; gap: .8rem;
+      transition: all .25s ease;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,.15); color: white; }
+
+    /* MAIN AREA */
+    .main-area {
+      flex: 1; display: flex; flex-direction: column; min-height: 100vh;
+    }
+
+    /* TOPBAR */
+    .topbar {
       display: flex; justify-content: space-between; align-items: center;
-      max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; height: 56px;
+      padding: 1.5rem 2rem; background: transparent;
     }
-    .nav-brand a { color: white; font-weight: 700; font-size: 1.3rem; text-decoration: none; letter-spacing: 1px; }
-    .nav-links { display: flex; align-items: center; gap: .2rem; }
-    .nav-links a {
-      color: rgba(255,255,255,.8); text-decoration: none; font-size: .9rem;
-      padding: .4rem .8rem; border-radius: 4px; transition: background .2s, color .2s;
+    .greeting { font-size: 1.8rem; font-weight: 700; color: #1E1B4B; }
+    .greeting-sub { color: var(--slate-500); margin-top: .2rem; font-size: .95rem; }
+    .topbar-right { display: flex; align-items: center; gap: 1rem; }
+    .notif-btn {
+      width: 48px; height: 48px; border-radius: 50%; background: white; border: none;
+      font-size: 1.2rem; cursor: pointer; box-shadow: var(--shadow-md);
+      display: flex; align-items: center; justify-content: center; transition: transform .2s;
     }
-    .nav-links a:hover { background: rgba(255,255,255,.1); color: white; text-decoration: none; }
-    .nav-links a.active { background: rgba(255,255,255,.2); color: white; font-weight: 600; }
-    .nav-divider { width: 1px; height: 24px; background: rgba(255,255,255,.3); margin: 0 .5rem; }
-    .user-role { font-size: .8rem; opacity: .8; margin-left: .5rem; }
-    .btn-logout {
-      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3);
-      color: white; padding: .35rem .75rem; border-radius: 4px; cursor: pointer; font-size: .8rem;
-      transition: background .2s;
+    .notif-btn:hover { transform: scale(1.05); }
+    .user-card {
+      background: white; padding: .5rem 1.2rem .5rem .5rem; border-radius: 16px;
+      box-shadow: var(--shadow-md); display: flex; align-items: center; gap: .8rem;
     }
-    .btn-logout:hover { background: rgba(255,255,255,.25); }
-    .main-content {
-      padding: 1.5rem; max-width: 1200px; margin: 0 auto;
-      min-height: calc(100vh - 56px - 50px);
+    .avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(135deg, #7C3AED, #4F46E5);
     }
+    .user-info { display: flex; flex-direction: column; }
+    .user-name { font-weight: 700; font-size: .9rem; }
+    .user-role { font-size: .8rem; color: var(--slate-500); }
+
+    /* CONTENT */
+    .content { flex: 1; padding: 0 2rem 2rem; }
+
+    /* FOOTER */
     .footer {
-      background: #1a1a2e; color: rgba(255,255,255,.6); text-align: center;
-      padding: .8rem; font-size: .8rem; height: 50px;
+      text-align: center; padding: 1rem 2rem; font-size: .8rem;
+      color: var(--slate-400); background: transparent;
     }
     .footer p { margin: 0; }
   `]
 })
-export class Layout {
-  private readonly auth = inject(AuthService);
+export class Layout implements OnInit {
+  readonly auth = inject(AuthService);
   year = new Date().getFullYear();
+  greetMessage = '';
+  userRoleLabel = '';
 
-  getUserLabel(): string {
-    const roles = this.auth.getUserRoles();
-    if (roles.length === 0) return '';
-    return roles.map(r => r.replace('ROLE_', '')).join(', ');
+  menuItems: MenuItem[] = [
+    { label: 'Inicio', route: '/inicio', icon: '🏠' },
+    { label: 'Crear PQRS', route: '/crear-solicitud', icon: '📝' },
+    { label: 'Solicitudes', route: '/solicitudes', icon: '📋' },
+    { label: 'Usuarios', route: '/usuarios', icon: '👥' },
+  ];
+
+  ngOnInit(): void {
+    this.greetMessage = this.buildGreeting();
+    this.userRoleLabel = this.auth.getUserRoles().map(r => r.replace('ROLE_', '')).join(', ') || 'Usuario';
+  }
+
+  private buildGreeting(): string {
+    const h = new Date().getHours();
+    let prefix = 'Buenos';
+    if (h < 12) prefix += ' días';
+    else if (h < 18) prefix += 'as tardes';
+    else prefix += 'as noches';
+    return `${prefix}, ${this.auth.getUserName()} 👋`;
   }
 
   logout(): void {

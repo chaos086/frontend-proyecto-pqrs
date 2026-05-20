@@ -36,17 +36,18 @@ import { ROLES, ROL_LABELS } from '../../models/enums';
     </form>
   `,
   styles: [`
-    .card-form { max-width: 500px; background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .card-form { max-width: 500px; background: white; padding: 2rem; border-radius: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--slate-100); }
     .field { margin-bottom: 1rem; }
-    label { display: block; margin-bottom: .3rem; font-weight: 600; color: #555; font-size: .9rem; }
-    input, select { width: 100%; padding: .5rem; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: .9rem; }
-    .field-error { color: #d32f2f; font-size: .8rem; margin-top: .2rem; }
+    label { display: block; margin-bottom: .3rem; font-weight: 600; color: var(--slate-600); font-size: .9rem; }
+    input, select { width: 100%; padding: .6rem; border: 1px solid var(--slate-200); border-radius: 12px; box-sizing: border-box; font-size: .9rem; }
+    input:focus, select:focus { outline: none; border-color: var(--purple-500); box-shadow: 0 0 0 3px rgba(124,58,237,.1); }
+    .field-error { color: #DC2626; font-size: .8rem; margin-top: .2rem; }
     .form-actions { display: flex; gap: .5rem; align-items: center; margin-top: 1.5rem; }
-    .btn-primary { padding: .5rem 1.5rem; background: #1976d2; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: .9rem; }
+    .btn-primary { padding: .6rem 1.5rem; background: linear-gradient(135deg, #6D28D9, #4F46E5); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: .9rem; font-weight: 600; }
     .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
-    .btn-cancel { padding: .5rem 1.5rem; background: #e0e0e0; color: #333; text-decoration: none; border-radius: 6px; font-size: .9rem; }
-    .error { color: #d32f2f; margin-top: .8rem; }
-    .success { color: #2e7d32; margin-top: .8rem; }
+    .btn-cancel { padding: .6rem 1.5rem; background: var(--slate-100); color: var(--slate-600); text-decoration: none; border-radius: 12px; font-size: .9rem; }
+    .error { color: #DC2626; margin-top: .8rem; background: #FEE2E2; padding: .5rem; border-radius: 8px; }
+    .success { color: #059669; margin-top: .8rem; background: #D1FAE5; padding: .5rem; border-radius: 8px; }
   `]
 })
 export class CrearUsuario {

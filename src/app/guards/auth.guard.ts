@@ -20,7 +20,7 @@ export function roleGuard(allowedRoles: string[]): CanActivateFn {
     }
     const hasRole = allowedRoles.some(r => auth.hasRole(r));
     if (!hasRole) {
-      return router.parseUrl('/solicitudes');
+      return router.parseUrl('/inicio');
     }
     return true;
   };

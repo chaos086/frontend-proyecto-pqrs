@@ -11,6 +11,9 @@ import { AuthService } from '../../services/auth.service';
   template: `
     <div class="login-container">
       <div class="login-card">
+        <div class="login-logo-box">
+          <span class="login-logo-text">UQ</span>
+        </div>
         <h2>Iniciar Sesión</h2>
         <p class="subtitle">Sistema PQRS - Universidad del Quindío</p>
         <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
@@ -37,30 +40,37 @@ import { AuthService } from '../../services/auth.service';
   styles: [`
     .login-container {
       display: flex; justify-content: center; align-items: center;
-      min-height: 100vh; background: linear-gradient(135deg, #1565c0, #0d47a1);
+      min-height: 100vh; background: linear-gradient(135deg, #2E1065 0%, #5B21B6 50%, #4F46E5 100%);
     }
     .login-card {
-      background: white; padding: 2.5rem; border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,.2); width: 100%; max-width: 400px;
+      background: white; padding: 2.5rem; border-radius: 24px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.25); width: 100%; max-width: 420px;
     }
-    h2 { margin: 0 0 .3rem; text-align: center; color: #1a1a2e; }
-    .subtitle { text-align: center; color: #888; font-size: .85rem; margin-bottom: 1.5rem; }
+    .login-logo-box {
+      width: 72px; height: 72px; background: linear-gradient(135deg, #6D28D9, #4F46E5);
+      border-radius: 18px; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.2rem;
+    }
+    .login-logo-text { color: white; font-size: 2rem; font-weight: 900; }
+    h2 { margin: 0 0 .3rem; text-align: center; color: #1E1B4B; font-size: 1.6rem; }
+    .subtitle { text-align: center; color: var(--slate-500); font-size: .85rem; margin-bottom: 1.5rem; }
     .field { margin-bottom: 1.2rem; }
-    label { display: block; margin-bottom: .3rem; font-weight: 600; color: #555; font-size: .9rem; }
+    label { display: block; margin-bottom: .3rem; font-weight: 600; color: var(--slate-600); font-size: .9rem; }
     input {
-      width: 100%; padding: .7rem; border: 1px solid #ddd; border-radius: 6px;
-      box-sizing: border-box; font-size: .95rem; transition: border-color .2s;
+      width: 100%; padding: .75rem; border: 1px solid var(--slate-200); border-radius: 12px;
+      box-sizing: border-box; font-size: .95rem; transition: border-color .2s, box-shadow .2s;
     }
-    input:focus { outline: none; border-color: #1976d2; box-shadow: 0 0 0 2px rgba(25,118,210,.15); }
+    input:focus { outline: none; border-color: var(--purple-500); box-shadow: 0 0 0 3px rgba(124,58,237,.15); }
     button {
-      width: 100%; padding: .75rem; background: #1976d2; color: white;
-      border: none; border-radius: 6px; font-size: 1rem; cursor: pointer; font-weight: 600;
-      transition: background .2s;
+      width: 100%; padding: .75rem;
+      background: linear-gradient(135deg, #6D28D9, #4F46E5); color: white;
+      border: none; border-radius: 12px; font-size: 1rem; cursor: pointer; font-weight: 600;
+      transition: opacity .2s, transform .2s;
     }
-    button:hover:not(:disabled) { background: #1565c0; }
-    button:disabled { opacity: .6; cursor: not-allowed; }
-    .error { color: #d32f2f; text-align: center; margin-top: 1rem; font-size: .9rem; }
-    .field-error { color: #d32f2f; font-size: .8rem; margin-top: .2rem; }
+    button:hover:not(:disabled) { opacity: .9; transform: scale(1.01); }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .error { color: #DC2626; text-align: center; margin-top: 1rem; font-size: .9rem; background: #FEE2E2; padding: .5rem; border-radius: 8px; }
+    .field-error { color: #DC2626; font-size: .8rem; margin-top: .2rem; }
   `]
 })
 export class Login {
@@ -77,7 +87,7 @@ export class Login {
     this.loading = true;
     this.error = '';
     this.auth.login({ email: this.email, password: this.password }).subscribe({
-      next: () => this.router.navigateByUrl('/solicitudes'),
+      next: () => this.router.navigateByUrl('/inicio'),
       error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.error = 'No se puede conectar con el servidor. Verifica que el backend esté corriendo.';

@@ -49,6 +49,14 @@ export class AuthService {
     return this.decodePayload()?.uid ?? null;
   }
 
+  getUserEmail(): string | null {
+    return this.decodePayload()?.sub ?? null;
+  }
+
+  getUserName(): string {
+    return this.getUserEmail()?.split('@')[0] || 'Usuario';
+  }
+
   getUserRoles(): string[] {
     return this.decodePayload()?.roles ?? [];
   }

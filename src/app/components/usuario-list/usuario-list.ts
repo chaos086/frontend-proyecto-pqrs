@@ -10,56 +10,64 @@ import { ROL_LABELS } from '../../models/enums';
   selector: 'app-usuario-list',
   imports: [NgFor, NgIf, RouterLink],
   template: `
-    <div class="header-bar">
-      <h2>Usuarios</h2>
-      <a routerLink="/crear-usuario" class="btn-primary">+ Nuevo Usuario</a>
-    </div>
+    <div class="page-card">
+      <div class="page-header">
+        <div>
+          <h2 class="page-title">Usuarios</h2>
+          <p class="page-sub">Gestión de usuarios del sistema</p>
+        </div>
+        <a routerLink="/crear-usuario" class="btn-primary">+ Nuevo Usuario</a>
+      </div>
 
-    <p class="loading" *ngIf="loading">Cargando usuarios...</p>
-    <p class="error" *ngIf="error">{{ error }}</p>
+      <p class="loading" *ngIf="loading">Cargando usuarios...</p>
+      <p class="error" *ngIf="error">{{ error }}</p>
 
-    <div class="table-wrapper" *ngIf="!loading && !error">
-      <table>
-        <thead>
-          <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let u of usuarios">
-            <td>{{ u.nombre }}</td>
-            <td>{{ u.email }}</td>
-            <td>{{ rolLabel(u.rol) }}</td>
-            <td><span class="badge" [class]="u.estado">{{ u.estado }}</span></td>
-            <td class="actions-cell">
-              <button *ngIf="u.estado === 'ACTIVO' && esCoordinador()" (click)="desactivar(u)" class="btn-sm btn-danger-outline">Desactivar</button>
-              <button *ngIf="u.estado === 'INACTIVO' && esCoordinador()" (click)="activar(u)" class="btn-sm btn-primary-outline">Activar</button>
-            </td>
-          </tr>
-          <tr *ngIf="usuarios.length === 0"><td colspan="5" class="empty">No hay usuarios registrados</td></tr>
-        </tbody>
-      </table>
+      <div class="table-wrapper" *ngIf="!loading && !error">
+        <table>
+          <thead>
+            <tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of usuarios">
+              <td class="td-bold">{{ u.nombre }}</td>
+              <td class="td-muted">{{ u.email }}</td>
+              <td><span class="badge badge-purple">{{ rolLabel(u.rol) }}</span></td>
+              <td><span class="badge" [class]="u.estado === 'ACTIVO' ? 'badge-green' : 'badge-gray'">{{ u.estado }}</span></td>
+              <td>
+                <button *ngIf="u.estado === 'ACTIVO' && esCoordinador()" (click)="desactivar(u)" class="btn-action btn-danger">Desactivar</button>
+                <button *ngIf="u.estado === 'INACTIVO' && esCoordinador()" (click)="activar(u)" class="btn-action">Activar</button>
+              </td>
+            </tr>
+            <tr *ngIf="usuarios.length === 0"><td colspan="5" class="empty-cell">No hay usuarios registrados</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   `,
   styles: [`
-    .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .table-wrapper { background: white; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.08); overflow: hidden; }
+    .page-card { background: white; border-radius: 24px; padding: 2rem; box-shadow: var(--shadow-sm); border: 1px solid var(--slate-100); }
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .page-title { font-size: 1.5rem; font-weight: 700; color: #1E1B4B; }
+    .page-sub { color: var(--slate-500); font-size: .9rem; margin-top: .2rem; }
+    .table-wrapper { overflow: hidden; border-radius: 16px; border: 1px solid var(--slate-100); }
     table { width: 100%; border-collapse: collapse; }
-    th, td { padding: .7rem .8rem; text-align: left; border-bottom: 1px solid #f0f0f0; font-size: .9rem; }
-    th { background: #fafafa; font-weight: 600; color: #555; font-size: .8rem; text-transform: uppercase; letter-spacing: .5px; }
-    tr:last-child td { border-bottom: none; }
-    .badge { padding: .2rem .6rem; border-radius: 12px; font-size: .8rem; font-weight: 500; }
-    .ACTIVO { background: #e8f5e9; color: #2e7d32; }
-    .INACTIVO { background: #fbe9e7; color: #c62828; }
-    .actions-cell { display: flex; gap: .3rem; }
-    .btn-sm { padding: .3rem .6rem; border-radius: 4px; cursor: pointer; font-size: .8rem; border: 1px solid; transition: background .2s, color .2s; }
-    .btn-primary-outline { border-color: #1976d2; background: white; color: #1976d2; }
-    .btn-primary-outline:hover { background: #1976d2; color: white; }
-    .btn-danger-outline { border-color: #d32f2f; background: white; color: #d32f2f; }
-    .btn-danger-outline:hover { background: #d32f2f; color: white; }
-    .btn-primary { padding: .5rem 1rem; background: #1976d2; color: white; text-decoration: none; border-radius: 6px; font-size: .9rem; transition: background .2s; }
-    .btn-primary:hover { background: #1565c0; text-decoration: none; }
-    .empty { text-align: center; color: #999; padding: 2rem; font-style: italic; }
+    th { background: var(--slate-50); text-align: left; padding: 1rem 1rem; font-size: .8rem; color: var(--slate-500); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+    td { padding: .9rem 1rem; border-top: 1px solid var(--slate-100); font-size: .9rem; }
+    tr:hover td { background: var(--slate-50); }
+    .td-bold { font-weight: 600; }
+    .td-muted { color: var(--slate-500); }
+    .empty-cell { text-align: center; color: var(--slate-400); padding: 2rem; }
     .loading, .error { text-align: center; padding: 2rem; }
-    .error { color: #d32f2f; background: #fff5f5; border-radius: 8px; border: 1px solid #ffcdd2; }
+    .error { color: #DC2626; background: #FEE2E2; border-radius: 12px; border: 1px solid #FECACA; }
+    .badge { padding: .3rem .8rem; border-radius: 999px; font-size: .8rem; font-weight: 600; display: inline-block; }
+    .badge-purple { background: #EDE9FE; color: #6D28D9; }
+    .badge-green { background: #D1FAE5; color: #059669; }
+    .badge-gray { background: #F1F5F9; color: #64748B; }
+    .btn-primary { background: linear-gradient(135deg, #6D28D9, #4F46E5); color: white; padding: .6rem 1.2rem; border: none; border-radius: 12px; font-weight: 600; font-size: .9rem; cursor: pointer; text-decoration: none; display: inline-block; }
+    .btn-primary:hover { opacity: .9; text-decoration: none; color: white; }
+    .btn-action { padding: .3rem .7rem; border-radius: 8px; border: none; cursor: pointer; font-size: .8rem; font-weight: 500; background: var(--purple-600); color: white; }
+    .btn-action:hover { opacity: .85; }
+    .btn-danger { background: #DC2626; }
   `]
 })
 export class UsuarioList implements OnInit {
@@ -69,15 +77,11 @@ export class UsuarioList implements OnInit {
   usuarios: UsuarioResponse[] = [];
   loading = true;
   error = '';
-  labelsRol = ROL_LABELS;
 
-  ngOnInit(): void {
-    this.cargar();
-  }
+  ngOnInit(): void { this.cargar(); }
 
   cargar(): void {
-    this.loading = true;
-    this.error = '';
+    this.loading = true; this.error = '';
     this.usuarioService.listar().subscribe({
       next: data => { this.usuarios = data; this.loading = false; },
       error: () => { this.error = 'Error al cargar usuarios. ¿El backend está corriendo?'; this.loading = false; }
@@ -85,16 +89,13 @@ export class UsuarioList implements OnInit {
   }
 
   rolLabel(rol: string): string { return ROL_LABELS[rol as keyof typeof ROL_LABELS] || rol; }
-
-  esCoordinador(): boolean {
-    return this.auth.hasRole('ROLE_COORDINADOR');
-  }
+  esCoordinador(): boolean { return this.auth.hasRole('ROLE_COORDINADOR'); }
 
   activar(u: UsuarioResponse): void {
-    this.usuarioService.activar(u.id).subscribe(() => u.estado = 'ACTIVO');
+    this.usuarioService.activar(u.id).subscribe(() => { u.estado = 'ACTIVO'; this.cargar(); });
   }
 
   desactivar(u: UsuarioResponse): void {
-    this.usuarioService.desactivar(u.id).subscribe(() => u.estado = 'INACTIVO');
+    this.usuarioService.desactivar(u.id).subscribe(() => { u.estado = 'INACTIVO'; this.cargar(); });
   }
 }

@@ -1,0 +1,56 @@
+:root {
+  --purple-900: #2E1065;
+  --purple-800: #3B0764;
+  --purple-700: #5B21B6;
+  --purple-600: #6D28D9;
+  --purple-500: #7C3AED;
+  --purple-400: #8B5CF6;
+  --purple-100: #EDE9FE;
+  --indigo-600: #4F46E5;
+  --indigo-500: #6366F1;
+  --green-600: #059669;
+  --green-100: #D1FAE5;
+  --yellow-600: #D97706;
+  --yellow-100: #FEF3C7;
+  --blue-600: #2563EB;
+  --blue-100: #DBEAFE;
+  --red-600: #DC2626;
+  --red-100: #FEE2E2;
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-300: #CBD5E1;
+  --slate-400: #94A3B8;
+  --slate-500: #64748B;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1E293B;
+  --slate-900: #0F172A;
+  --white: #FFFFFF;
+  --bg-body: #F5F7FB;
+  --text-primary: #111827;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --sidebar-width: 290px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg-body);
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+a { color: var(--purple-600); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img { max-width: 100%; vertical-align: middle; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--slate-300); border-radius: 3px; }
+
+input, select, textarea, button { font-family: inherit; }
