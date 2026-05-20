@@ -200,7 +200,7 @@ import { ESTADOS_SOLICITUD, TIPOS_SOLICITUD, TIPO_LABELS, PRIORIDADES, PRIORIDAD
     .loading, .error { text-align: center; padding: 2rem; }
     .error { color: #DC2626; background: #FEE2E2; border-radius: 12px; border: 1px solid #FECACA; }
     .actions-wrap { display: flex; gap: .3rem; flex-wrap: wrap; }
-    .btn-action { padding: .3rem .7rem; border-radius: 8px; border: none; background: var(--purple-600); color: white; cursor: pointer; font-size: .8rem; font-weight: 500; }
+    .btn-action { padding: .3rem .7rem; border-radius: 8px; border: none; background: var(--purple-600); color: black; cursor: pointer; font-size: .8rem; font-weight: 500; }
     .btn-action:hover { opacity: .85; }
     .btn-danger { background: #DC2626; }
     .btn-outline-action { background: white; color: var(--slate-600); border: 1px solid var(--slate-200); }
@@ -239,6 +239,7 @@ export class SolicitudList implements OnInit {
   error = '';
   filtroEstado = '';
 
+
   formAccion: string | null = null;
   accionData: any = {};
   solicitudSeleccionada: SolicitudResponse | null = null;
@@ -259,6 +260,7 @@ export class SolicitudList implements OnInit {
   ngOnInit(): void {
     this.cargar();
     this.route.paramMap.subscribe(() => this.cargar());
+    console.log('solicitudes ',this.solicitudes);
   }
 
   esCoordinador(): boolean { return this.auth.hasRole('ROLE_COORDINADOR'); }
@@ -272,36 +274,60 @@ export class SolicitudList implements OnInit {
     return map[estado] || 'secondary';
   }
 
-  cargar(): void {
-    this.loading = true; this.error = '';
-    const page = this.first() / this.rows();
-    const size = this.rows();
-    if (this.filtroEstado) {
-      this.solicitudService.listarPorEstado(this.filtroEstado).subscribe({
-        next: data => { this.solicitudes = data; this.totalRecords.set(data.length); this.loading = false; },
-        error: () => { this.error = 'Error al cargar solicitudes. \u00BFEl backend est\u00E1 corriendo?'; this.loading = false; }
-      });
-    } else {
-      this.solicitudService.listarPaginado(page, size).subscribe({
-        next: data => {
-          this.solicitudes = data.content;
-          this.totalRecords.set(data.totalElements);
-          this.loading = false;
-        },
-        error: () => {
-          this.solicitudService.listar().subscribe({
-            next: data => { this.solicitudes = data; this.totalRecords.set(data.length); this.loading = false; },
-            error: () => { this.error = 'Error al cargar solicitudes. \u00BFEl backend est\u00E1 corriendo?'; this.loading = false; }
-          });
-        }
-      });
-    }
+cargar(): void {
+  this.loading = true;
+  this.error = '';
+
+  const page = this.first() / this.rows();
+  const size = this.rows();
+
+  if (this.filtroEstado) {
+    this.solicitudService.listarPorEstado(this.filtroEstado).subscribe({
+      next: data => {
+        this.solicitudes = data;
+        this.totalRecords.set(data.length);
+        this.loading = false;
+
+        console.log('solicitudes filtradas:', this.solicitudes);
+      },
+      error: () => {
+        this.error = 'Error al cargar solicitudes. ¿El backend está corriendo?';
+        this.loading = false;
+      }
+    });
+  } else {
+    this.solicitudService.listarPaginado(page, size).subscribe({
+      next: data => {
+        this.solicitudes = data.content;
+        this.totalRecords.set(data.totalElements);
+        this.loading = false;
+
+        console.log('solicitudes paginadas:', this.solicitudes);
+      },
+      error: () => {
+        this.solicitudService.listar().subscribe({
+          next: data => {
+            this.solicitudes = data;
+            this.totalRecords.set(data.length);
+            this.loading = false;
+
+            console.log('solicitudes fallback:', this.solicitudes);
+          },
+          error: () => {
+            this.error = 'Error al cargar solicitudes. ¿El backend está corriendo?';
+            this.loading = false;
+          }
+        });
+      }
+    });
   }
+}
 
   onPageChange(event: any): void {
     this.first.set(event.first);
     this.rows.set(event.rows);
     this.cargar();
+    console.log('solicitudes ',this.solicitudes);
   }
 
   cargarProfesores(): void {
@@ -324,6 +350,7 @@ export class SolicitudList implements OnInit {
     this.cerrarForm();
     this.notificationService.success(msg);
     this.cargar();
+    console.log('solicitudes ',this.solicitudes);
   }
   private accionError(e: any): void {
     this.errorAccion = e.error?.message || 'Error en la operaci\u00F3n';
@@ -340,6 +367,7 @@ export class SolicitudList implements OnInit {
     this.cargandoAccion = true;
     this.solicitudService.priorizar(this.solicitudSeleccionada!.id, { prioridad: this.accionData.prioridad, justificacion: this.accionData.justificacion, coordinadorId: this.auth.getUserId()! })
       .subscribe({ next: () => { this.cargandoAccion = false; this.accionOk('Prioridad asignada correctamente'); }, error: e => this.accionError(e) });
+  console.log('solicitudes ',this.solicitudes);
   }
   ejecutarAsignar(): void {
     this.cargandoAccion = true;
