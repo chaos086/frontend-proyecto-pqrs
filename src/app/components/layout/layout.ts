@@ -1,15 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Toast } from 'primeng/toast';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { LucideLayoutDashboard, LucideFileEdit, LucideClipboardList, LucideUsers, LucideLogOut, LucideBell } from '@lucide/angular';
 import { AuthService } from '../../services/auth.service';
-
-interface MenuItem { label: string; route: string; icon: string; badge?: number; }
 
 @Component({
   selector: 'app-layout',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgFor, NgIf, Toast, ConfirmDialog],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, NgIf, Toast, ConfirmDialog,
+    LucideLayoutDashboard, LucideFileEdit, LucideClipboardList, LucideUsers, LucideLogOut, LucideBell],
   template: `
     <div class="layout">
       <p-toast position="top-right" [breakpoints]="{'920px': {width: '90%'}}" />
@@ -32,14 +32,21 @@ interface MenuItem { label: string; route: string; icon: string; badge?: number;
 
           <!-- Menu -->
           <nav class="menu">
-            <a *ngFor="let item of menuItems"
-               [routerLink]="item.route"
-               routerLinkActive="menu-active"
-               [routerLinkActiveOptions]="{exact: item.route === '/inicio'}"
-               class="menu-item">
-              <span class="menu-icon">{{ item.icon }}</span>
-              <span class="menu-label">{{ item.label }}</span>
-              <span *ngIf="item.badge" class="menu-badge">{{ item.badge }}</span>
+            <a routerLink="/inicio" routerLinkActive="menu-active" [routerLinkActiveOptions]="{exact: true}" class="menu-item">
+              <span class="menu-icon"><svg lucideLayoutDashboard size="20"></svg></span>
+              <span class="menu-label">Inicio</span>
+            </a>
+            <a routerLink="/crear-solicitud" routerLinkActive="menu-active" class="menu-item">
+              <span class="menu-icon"><svg lucideFileEdit size="20"></svg></span>
+              <span class="menu-label">Crear PQRS</span>
+            </a>
+            <a routerLink="/solicitudes" routerLinkActive="menu-active" class="menu-item">
+              <span class="menu-icon"><svg lucideClipboardList size="20"></svg></span>
+              <span class="menu-label">Solicitudes</span>
+            </a>
+            <a *ngIf="esCoordinador" routerLink="/usuarios" routerLinkActive="menu-active" class="menu-item">
+              <span class="menu-icon"><svg lucideUsers size="20"></svg></span>
+              <span class="menu-label">Usuarios</span>
             </a>
           </nav>
         </div>
@@ -47,7 +54,7 @@ interface MenuItem { label: string; route: string; icon: string; badge?: number;
         <!-- Logout -->
         <div class="sidebar-bottom">
           <button class="logout-btn" (click)="logout()">
-            <span class="menu-icon">🚪</span>
+            <span class="menu-icon"><svg lucideLogOut size="20"></svg></span>
             Cerrar sesión
           </button>
         </div>
@@ -62,7 +69,7 @@ interface MenuItem { label: string; route: string; icon: string; badge?: number;
             <p class="greeting-sub">Bienvenido al sistema PQRS de la Universidad del Quindío.</p>
           </div>
           <div class="topbar-right">
-            <button class="notif-btn">🔔</button>
+            <button class="notif-btn"><svg lucideBell size="20"></svg></button>
             <div class="user-card">
               <div class="avatar"></div>
               <div class="user-info">
@@ -183,15 +190,10 @@ export class Layout implements OnInit {
   year = new Date().getFullYear();
   greetMessage = '';
   userRoleLabel = '';
-
-  menuItems: MenuItem[] = [
-    { label: 'Inicio', route: '/inicio', icon: '🏠' },
-    { label: 'Crear PQRS', route: '/crear-solicitud', icon: '📝' },
-    { label: 'Solicitudes', route: '/solicitudes', icon: '📋' },
-    { label: 'Usuarios', route: '/usuarios', icon: '👥' },
-  ];
+  esCoordinador = false;
 
   ngOnInit(): void {
+    this.esCoordinador = this.auth.hasRole('ROLE_COORDINADOR');
     this.greetMessage = this.buildGreeting();
     this.userRoleLabel = this.auth.getUserRoles().map(r => r.replace('ROLE_', '')).join(', ') || 'Usuario';
   }
@@ -202,7 +204,7 @@ export class Layout implements OnInit {
     if (h < 12) prefix += ' días';
     else if (h < 18) prefix += 'as tardes';
     else prefix += 'as noches';
-    return `${prefix}, ${this.auth.getUserName()} 👋`;
+    return `${prefix}, ${this.auth.getUserName()}`;
   }
 
   logout(): void {

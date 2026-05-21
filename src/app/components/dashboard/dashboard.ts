@@ -1,17 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { NgFor, NgIf, DatePipe, SlicePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LucideFileText, LucideClock, LucideRefreshCw, LucideCheckCircle, LucideHelpCircle } from '@lucide/angular';
 import { SolicitudService } from '../../services/solicitud.service';
 import type { SolicitudResponse } from '../../models/solicitud.models';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NgFor, NgIf, DatePipe, SlicePipe, RouterLink],
+  imports: [NgFor, NgIf, DatePipe, SlicePipe, RouterLink,
+    LucideFileText, LucideClock, LucideRefreshCw, LucideCheckCircle, LucideHelpCircle],
   template: `
     <!-- Stats -->
     <section class="stats-grid">
       <div class="stat-card">
-        <div class="stat-icon bg-purple-100"><span class="icon">📄</span></div>
+        <div class="stat-icon bg-purple-100"><svg lucideFileText size="28" color="#6D28D9"></svg></div>
         <div class="stat-info">
           <h3 class="stat-value purple">{{ total }}</h3>
           <p class="stat-title">Total PQRS</p>
@@ -19,7 +21,7 @@ import type { SolicitudResponse } from '../../models/solicitud.models';
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon bg-yellow-100"><span class="icon">⏰</span></div>
+        <div class="stat-icon bg-yellow-100"><svg lucideClock size="28" color="#D97706"></svg></div>
         <div class="stat-info">
           <h3 class="stat-value yellow">{{ pendientes }}</h3>
           <p class="stat-title">Pendientes</p>
@@ -27,7 +29,7 @@ import type { SolicitudResponse } from '../../models/solicitud.models';
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon bg-indigo-100"><span class="icon">🔄</span></div>
+        <div class="stat-icon bg-indigo-100"><svg lucideRefreshCw size="28" color="#4F46E5"></svg></div>
         <div class="stat-info">
           <h3 class="stat-value indigo">{{ enProceso }}</h3>
           <p class="stat-title">En Proceso</p>
@@ -35,7 +37,7 @@ import type { SolicitudResponse } from '../../models/solicitud.models';
         </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon bg-green-100"><span class="icon">✅</span></div>
+        <div class="stat-icon bg-green-100"><svg lucideCheckCircle size="28" color="#059669"></svg></div>
         <div class="stat-info">
           <h3 class="stat-value green">{{ resueltas }}</h3>
           <p class="stat-title">Resueltas</p>
@@ -97,7 +99,7 @@ import type { SolicitudResponse } from '../../models/solicitud.models';
         <div class="help-list">
           <div class="help-card">
             <div class="help-card-inner">
-              <div class="help-icon">?</div>
+              <div class="help-icon"><svg lucideHelpCircle size="24" color="#6D28D9"></svg></div>
               <div>
                 <h3 class="help-title">¿Cómo crear una PQRS?</h3>
                 <p class="help-desc">Aprende el paso a paso para crear tu solicitud.</p>
@@ -107,7 +109,7 @@ import type { SolicitudResponse } from '../../models/solicitud.models';
           </div>
           <div class="help-card">
             <div class="help-card-inner">
-              <div class="help-icon">?</div>
+              <div class="help-icon"><svg lucideHelpCircle size="24" color="#6D28D9"></svg></div>
               <div>
                 <h3 class="help-title">Preguntas frecuentes</h3>
                 <p class="help-desc">Resuelve tus dudas sobre el sistema.</p>

@@ -54,8 +54,8 @@ import { ESTADOS_SOLICITUD, TIPOS_SOLICITUD, TIPO_LABELS, PRIORIDADES, PRIORIDAD
                   <button *ngIf="s.estado === 'REGISTRADA' && esCoordinador()" (click)="abrirForm(s, 'clasificar')" class="btn-action">Clasificar</button>
                   <button *ngIf="s.estado === 'CLASIFICADA' && esCoordinador()" (click)="abrirForm(s, 'priorizar')" class="btn-action">Priorizar</button>
                   <button *ngIf="s.estado === 'CLASIFICADA' && esCoordinador()" (click)="abrirForm(s, 'asignar'); cargarProfesores()" class="btn-action">Asignar</button>
-                  <button *ngIf="s.estado === 'EN_ATENCION' && esResponsable(s)" (click)="abrirForm(s, 'atender')" class="btn-action">Atender</button>
-                  <button *ngIf="(s.estado === 'EN_ATENCION' || s.estado === 'ATENDIDA') && esResponsable(s)" (click)="confirmarCerrar(s)" class="btn-action btn-danger">Cerrar</button>
+              <button *ngIf="s.estado === 'EN_ATENCION' && (esCoordinador() || esResponsable(s))" (click)="abrirForm(s, 'atender')" class="btn-action">Atender</button>
+              <button *ngIf="(s.estado === 'EN_ATENCION' || s.estado === 'ATENDIDA') && (esCoordinador() || esResponsable(s))" (click)="confirmarCerrar(s)" class="btn-action btn-danger">Cerrar</button>
                   <button (click)="verDetalle(s)" class="btn-action btn-outline-action">Detalle</button>
                 </div>
               </td>
@@ -111,7 +111,7 @@ import { ESTADOS_SOLICITUD, TIPOS_SOLICITUD, TIPO_LABELS, PRIORIDADES, PRIORIDAD
             <label>Profesor responsable</label>
             <select [(ngModel)]="accionData.responsableId">
               <option value="">Seleccione...</option>
-              <option *ngFor="let p of profesores" [value]="p.id">{{ p.nombre }} ({{ p.email }})</option>
+              <option *ngFor="let p of profesores" [value]="p.id">{{ p.nombre }} ({{ p.email }}) - {{ p.rol }}</option>
             </select>
           </div>
           <div class="modal-actions">
@@ -332,7 +332,7 @@ cargar(): void {
 
   cargarProfesores(): void {
     this.usuarioService.listar().subscribe(data => {
-      this.profesores = data.filter(u => u.rol === 'PROFESOR' && u.estado === 'ACTIVO');
+      this.profesores = data.filter(u => (u.rol === 'PROFESOR' || u.rol === 'COORDINADOR') && u.estado === 'ACTIVO');
     });
   }
 
