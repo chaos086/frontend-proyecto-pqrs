@@ -3,7 +3,9 @@ import { NgFor, NgIf, DatePipe, SlicePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LucideFileText, LucideClock, LucideRefreshCw, LucideCheckCircle, LucideHelpCircle } from '@lucide/angular';
 import { SolicitudService } from '../../services/solicitud.service';
+import { TIPO_LABELS } from '../../models/enums';
 import type { SolicitudResponse } from '../../models/solicitud.models';
+import type { TipoSolicitud } from '../../models/enums';
 
 @Component({
   selector: 'app-dashboard',
@@ -87,8 +89,10 @@ import type { SolicitudResponse } from '../../models/solicitud.models';
           <button class="btn-outline">Este mes</button>
         </div>
         <div class="chart-bars">
-          <div *ngFor="let h of barHeights" class="bar-wrapper">
-            <div class="bar" [style.height.px]="h"></div>
+          <div *ngFor="let item of chartData" class="bar-wrapper">
+            <div class="bar" [style.height.px]="item.height"></div>
+            <span class="bar-label">{{ item.label }}</span>
+            <span class="bar-count">{{ item.count }}</span>
           </div>
         </div>
       </div>
@@ -196,6 +200,8 @@ import type { SolicitudResponse } from '../../models/solicitud.models';
       background: linear-gradient(180deg, #6D28D9, #A78BFA);
       transition: height .5s ease; min-height: 4px;
     }
+    .bar-label { margin-top: .5rem; font-size: .75rem; font-weight: 600; color: var(--slate-600); text-align: center; }
+    .bar-count { font-size: .8rem; font-weight: 700; color: var(--purple-600); }
 
     .help-section { display: flex; flex-direction: column; }
     .help-list { margin-top: 1.5rem; display: flex; flex-direction: column; gap: .8rem; flex: 1; }
@@ -223,7 +229,9 @@ export class Dashboard implements OnInit {
   loading = true;
   total = 0; pendientes = 0; enProceso = 0; resueltas = 0;
   recientes: SolicitudResponse[] = [];
-  barHeights = [40, 70, 55, 90, 65, 120, 95, 140, 80, 100];
+  chartData: { label: string; count: number; height: number }[] = [];
+
+  private readonly MAX_BAR_HEIGHT = 200;
 
   ngOnInit(): void {
     this.solicitudService.listar().subscribe({
@@ -234,10 +242,24 @@ export class Dashboard implements OnInit {
         this.enProceso = data.filter(s => s.estado === 'EN_ATENCION').length;
         this.resueltas = data.filter(s => s.estado === 'ATENDIDA' || s.estado === 'CERRADA').length;
         this.recientes = data.slice(-5).reverse();
+        this.buildChartData();
         this.loading = false;
       },
       error: () => this.loading = false
     });
+  }
+
+  private buildChartData(): void {
+    const tipos: TipoSolicitud[] = ['PETICION', 'QUEJA', 'RECLAMO', 'SUGERENCIA', 'FELICITACION'];
+    const counts = tipos.map(t => ({
+      label: TIPO_LABELS[t],
+      count: this.solicitudes.filter(s => s.tipoSolicitud === t).length,
+    }));
+    const maxCount = Math.max(...counts.map(c => c.count), 1);
+    this.chartData = counts.map(c => ({
+      ...c,
+      height: Math.max((c.count / maxCount) * this.MAX_BAR_HEIGHT, 8),
+    }));
   }
 
   estadoClass(estado: string): string {

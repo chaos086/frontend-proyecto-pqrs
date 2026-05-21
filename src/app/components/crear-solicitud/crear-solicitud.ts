@@ -14,18 +14,20 @@ import { CANALES_ORIGEN, CANAL_LABELS } from '../../models/enums';
   template: `
     <h2>Nueva Solicitud</h2>
     <form (ngSubmit)="onSubmit()" class="card-form">
-      <div class="field">
-        <label for="solicitante">Solicitante</label>
-        <select id="solicitante" [(ngModel)]="solicitanteId" name="solicitanteId" required>
-          <option value="">Seleccione un usuario...</option>
-          <option *ngFor="let u of usuarios" [value]="u.id">{{ u.nombre }} ({{ u.email }})</option>
-        </select>
-        <p class="field-error" *ngIf="errorSolicitante">{{ errorSolicitante }}</p>
-      </div>
-      <div class="field">
-        <label for="nombreSolicitante">Nombre del solicitante</label>
-        <input id="nombreSolicitante" [(ngModel)]="nombreSolicitante" name="nombreSolicitante" placeholder="Nombre completo" />
-        <p class="field-error" *ngIf="errorNombre">{{ errorNombre }}</p>
+      <div class="form-grid-2">
+        <div class="field">
+          <label for="solicitante">Solicitante</label>
+          <select id="solicitante" [(ngModel)]="solicitanteId" name="solicitanteId" required>
+            <option value="">Seleccione un usuario...</option>
+            <option *ngFor="let u of usuarios" [value]="u.id">{{ u.nombre }} ({{ u.email }})</option>
+          </select>
+          <p class="field-error" *ngIf="errorSolicitante">{{ errorSolicitante }}</p>
+        </div>
+        <div class="field">
+          <label for="nombreSolicitante">Nombre del solicitante</label>
+          <input id="nombreSolicitante" [(ngModel)]="nombreSolicitante" name="nombreSolicitante" placeholder="Nombre completo" />
+          <p class="field-error" *ngIf="errorNombre">{{ errorNombre }}</p>
+        </div>
       </div>
       <div class="field">
         <label for="canalOrigen">Canal de origen</label>
@@ -46,7 +48,8 @@ import { CANALES_ORIGEN, CANAL_LABELS } from '../../models/enums';
     </form>
   `,
   styles: [`
-    .card-form { max-width: 600px; background: white; padding: 2rem; border-radius: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--slate-100); }
+    .card-form { background: white; padding: 2rem; border-radius: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--slate-100); }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .field { margin-bottom: 1rem; }
     label { display: block; margin-bottom: .3rem; font-weight: 600; color: var(--slate-600); font-size: .9rem; }
     input, select, textarea { width: 100%; padding: .6rem; border: 1px solid var(--slate-200); border-radius: 12px; box-sizing: border-box; font-size: .9rem; }

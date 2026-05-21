@@ -98,7 +98,7 @@ import { AuthService } from '../../services/auth.service';
     /* SIDEBAR */
     .sidebar {
       width: var(--sidebar-width); min-width: var(--sidebar-width);
-      background: linear-gradient(180deg, #2E1065 0%, #5B21B6 50%, #4F46E5 100%);
+      background: linear-gradient(180deg, #2E1065 0%, #4C1D95 100%);
       color: white; display: flex; flex-direction: column; justify-content: space-between;
       padding: 1.5rem; height: 100vh; overflow-y: auto; position: sticky; top: 0;
       box-shadow: 4px 0 24px rgba(0,0,0,.15); flex-shrink: 0;

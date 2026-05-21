@@ -12,15 +12,17 @@ import { ROLES, ROL_LABELS } from '../../models/enums';
   template: `
     <h2>Nuevo Usuario</h2>
     <form (ngSubmit)="onSubmit()" class="card-form">
-      <div class="field">
-        <label for="nombre">Nombre</label>
-        <input id="nombre" [(ngModel)]="nombre" name="nombre" placeholder="Nombre completo" />
-        <p class="field-error" *ngIf="errorNombre">{{ errorNombre }}</p>
-      </div>
-      <div class="field">
-        <label for="email">Correo electrónico</label>
-        <input id="email" type="email" [(ngModel)]="email" name="email" placeholder="correo@uniquindio.edu.co" />
-        <p class="field-error" *ngIf="errorEmail">{{ errorEmail }}</p>
+      <div class="form-grid-2">
+        <div class="field">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" [(ngModel)]="nombre" name="nombre" placeholder="Nombre completo" />
+          <p class="field-error" *ngIf="errorNombre">{{ errorNombre }}</p>
+        </div>
+        <div class="field">
+          <label for="email">Correo electrónico</label>
+          <input id="email" type="email" [(ngModel)]="email" name="email" placeholder="correo@uniquindio.edu.co" />
+          <p class="field-error" *ngIf="errorEmail">{{ errorEmail }}</p>
+        </div>
       </div>
       <div class="field">
         <label for="rol">Rol</label>
@@ -36,7 +38,8 @@ import { ROLES, ROL_LABELS } from '../../models/enums';
     </form>
   `,
   styles: [`
-    .card-form { max-width: 500px; background: white; padding: 2rem; border-radius: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--slate-100); }
+    .card-form { background: white; padding: 2rem; border-radius: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--slate-100); }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .field { margin-bottom: 1rem; }
     label { display: block; margin-bottom: .3rem; font-weight: 600; color: var(--slate-600); font-size: .9rem; }
     input, select { width: 100%; padding: .6rem; border: 1px solid var(--slate-200); border-radius: 12px; box-sizing: border-box; font-size: .9rem; }
