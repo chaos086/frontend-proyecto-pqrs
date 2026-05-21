@@ -20,9 +20,8 @@ import { AuthService } from '../../services/auth.service';
           <!-- Logo -->
           <div class="logo-section">
             <div class="logo-box">
-              <span class="logo-text">UQ</span>
+              <img src="/favicon.ico" alt="Universidad del Quindío" class="logo-img" />
             </div>
-            <h1 class="uni-name">Universidad<br>del Quindío</h1>
           </div>
 
           <div class="brand-section">
@@ -107,13 +106,10 @@ import { AuthService } from '../../services/auth.service';
 
     .logo-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 2rem; }
     .logo-box {
-      width: 96px; height: 96px; background: white; border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 8px 24px rgba(0,0,0,.2); margin-bottom: 1rem;
+      margin-bottom: 1rem;
     }
-    .logo-text { color: #5B21B6; font-size: 2.8rem; font-weight: 900; line-height: 1; }
-    .uni-name { font-size: 1.3rem; font-weight: 700; text-align: center; line-height: 1.3; }
-
+    .logo-img { width: 140px; height: 140px; object-fit: contain; }
     .brand-section { margin-top: 1.5rem; text-align: left; width: 100%; }
     .brand-title { font-size: 2.2rem; font-weight: 800; margin-bottom: .3rem; }
     .brand-subtitle { font-size: .85rem; color: rgba(255,255,255,.7); line-height: 1.5; }
@@ -200,11 +196,11 @@ export class Layout implements OnInit {
 
   private buildGreeting(): string {
     const h = new Date().getHours();
-    let prefix = 'Buenos';
-    if (h < 12) prefix += ' días';
-    else if (h < 18) prefix += 'as tardes';
-    else prefix += 'as noches';
-    return `${prefix}, ${this.auth.getUserName()}`;
+    let saludo: string;
+    if (h < 12) saludo = 'Buenos días';
+    else if (h < 18) saludo = 'Buenas tardes';
+    else saludo = 'Buenas noches';
+    return `${saludo}, ${this.auth.getUserName()}`;
   }
 
   logout(): void {
